@@ -1,0 +1,37 @@
+<%- include('partials/header.ejs') %>
+    <div class="card">
+        <div class="card-header text-center">
+            <h1>Update Data</h1>
+        </div>
+        <div class="card-body">
+            <form action="" method="post">
+                <div class="row mb-3">
+                    <label for="title" class="col-sm-2 col-form-label">Title</label>
+                    <div class="col-sm-10">
+                        <input type="title" class="form-control" id="title" name="title">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="deadline" class="col-sm-2 col-form-label">Deadline</label>
+                    <div class="col-sm-10">
+                        <input type="date" class="form-control" name="deadline">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="complete" class="col-sm-2 col-form-label">Complete</label>
+                    <div class="col-sm-10">
+                        <input class="form-check-input" type="radio" name="complete" id="complete" value="true"
+                            <%=todo.complete ? 'checked' : '' %>>
+                        <label class="form-check-label" for="complete">Complete</label>
+                    </div>
+                </div>
+        </div>
+        </fieldset>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a href="/users" class="btn btn-warning">Cancel</a>
+        </div>
+        </form>
+    </div>
+
+    <%- include('partials/footer.ejs') %>
