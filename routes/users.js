@@ -142,8 +142,8 @@ module.exports = function (db) {
   })
 
   router.get('/edit/:id', isLoggedIn, function (req, res, next) {
-    const id = req.params
-    
+    const { id } = req.params
+
     db.query('SELECT * FROM todos WHERE id = $1', [id], (err, result) => {
       if (err) return res.send(err)
       const todo = result.rows[0]
@@ -151,9 +151,9 @@ module.exports = function (db) {
     });
   });
 
-  router.post('/edit', function (req, res, next) {
+  router.post('/edit/:id', function (req, res, next) {
     const { title, deadline, complete } = req.body;
-    const id = req.params.id;
+    const { id } = req.params.id;
     db.query(
       'UPDATE todos SET title = $1,  complete = $2, deadline = $3 WHERE id = $4',
       [title, deadline, complete === '1' ? 1 : 0, id],
@@ -164,11 +164,12 @@ module.exports = function (db) {
     )
   })
 
-  router.get('/delete', function (req, res, next) {
-    const id = req.params.id;
-    db.query('DELETE FROM todos WHERE id = ?', [id], (err) => {
-      if(err) return res.send(err)
-        res.redirect('/users')
+  router.get('/delete/:id', isLoggedIn, function (req, res, next) {
+    const { id } = req.params
+
+    db.query('DELETE FROM todos WHERE id = $1', [id], (err) => {
+      if (err) return res.send(err)
+      res.redirect('/users')
     })
   })
 
