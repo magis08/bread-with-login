@@ -76,9 +76,10 @@
                     <td>
                         <%= item.complete ? 'done' : 'not yet' %>
                     </td>
-                    <td>
-                        <%= item.deadline %>
+                    <td> 
+                        <%=item.deadline %>
                     </td>
+
                     <td>
                         <a href="/users/edit/<%= item.id %>" class="btn btn-success"><i
                                 class="fa-solid fa-pencil"></i></a>
