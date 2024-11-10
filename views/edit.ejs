@@ -4,27 +4,32 @@
             <h1>Update Data</h1>
         </div>
         <div class="card-body">
-            <form action="" method="post">
+            <form action="/users/edit/<%= todo.id %>" method="post">
                 <div class="row mb-3">
                     <label for="title" class="col-sm-2 col-form-label">Title</label>
                     <div class="col-sm-10">
-                        <input type="title" class="form-control" id="title" name="title">
+                        <input type="title" class="form-control" id="title" name="title" value="<%= todo.title %>">
                     </div>
                 </div>
                 <div class="row mb-3">
                     <label for="deadline" class="col-sm-2 col-form-label">Deadline</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control" name="deadline">
+                        <input type="date" class="form-control" name="deadline" value="<%= todo.deadline %>">
                     </div>
                 </div>
                 <div class="row mb-3">
                     <label for="complete" class="col-sm-2 col-form-label">Complete</label>
                     <div class="col-sm-10">
-                        <input class="form-check-input" type="radio" name="complete" id="complete" value="true"
+                        <input class="form-check-input" type="radio" name="complete" id="complete" value="1"
                             <%=todo.complete ? 'checked' : '' %>>
                         <label class="form-check-label" for="complete">Complete</label>
+
+                        <input class="form-check-input" type="radio" name="complete" id="incomplete" value="0"
+                            <%=!todo.complete ? 'checked' : '' %>>
+                        <label class="form-check-label" for="incomplete">Incomplete</label>
                     </div>
                 </div>
+
         </div>
         </fieldset>
         <div class="card-footer">
