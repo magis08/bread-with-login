@@ -1,154 +1,175 @@
 <%- include('partials/header.ejs') %>
-<div class="card custom-card">
-    <div class="card-header custom-card-header">
-        <h1>
-            <%= user.email %>
-            <a href="/logout" class="btn btn-danger">logout</a>
-        </h1>
+    <div class="card custom-card">
+        <div class="card-header custom-card-header">
+            <h1 class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <a href="/upload"><img src="/avatars/<%= user.avatar || 'user.png' %>" width="100" height="100"
+                            class="rounded-circle" /></a>
+                    <span class="ms-3">
+                        <%= user.email %>
+                    </span>
+                </div>
+                <a href="/logout" class="btn btn-secondary">
+                    <i class="fa-solid fa-right-from-bracket"></i> Sign out
+                </a>
+            </h1>
+        </div>
+        <div class="card-header text-center">
+            <h2>PostgreSQL Breads (Browse, Read, Edit, Add, Delete, Sort)</h2>
+        </div>
     </div>
-    <div class="card-header text-center">
-        <h2>PostgreSQL Breads (Browse, Read, Edit, Add, Delete, Sort)</h2>
-    </div>
-</div>
 
-<div class="card custom-card">
-    <div class="card-body">
-        <form method="get" action="/todos">
-            <div class="row mb-3">
-                <label for="title" class="col-sm-2 col-form-label">Title</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="title" name="title" value="<%= title || '' %>"
-                        placeholder="Insert your title">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label for="deadline" class="col-sm-2 col-form-label">Deadline</label>
-                <div class="col-sm-10 d-flex align-items-center">
-                    <input type="date" class="form-control me-2" name="deadlineMin" value="<%= deadlineMin || '' %>">
-                    <span class="range-separator me-2" style="width: 400px; text-align: center;">s.d.</span>
-                    <input type="date" class="form-control" name="deadlineMax" value="<%= deadlineMax || '' %>">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label for="complete" class="col-sm-2 col-form-label">Complete</label>
-                <div class="col-sm-10">
-                    <select name="complete" id="complete" class="form-control">
-                        <option selected disabled class="d-none">&minus; Select Complete &minus;</option>
-                        <option value="false" <%= complete === 'false' ? 'selected' : '' %>>Not Yet</option>
-                        <option value="true" <%= complete === 'true' ? 'selected' : '' %>>Done</option>
-                    </select>
-                </div>
-            </div>
-            <fieldset class="row mb-3">
-                <legend class="col-form-label col-sm-2 pt-0">Operation</legend>
-                <div class="col-sm-10">
-                    <div>
-                        <label style="margin-right: 15px;">
-                            <input type="radio" name="operation" value="OR" <% if (operation === 'OR' || !operation) { %> checked <% } %>> OR
-                        </label>
-                        <label>
-                            <input type="radio" name="operation" value="AND" <% if (operation === 'AND') { %> checked <% } %>> AND
-                        </label>
+    <div class="card custom-card">
+        <div class="card-body">
+            <form method="get" action="/todos">
+                <div class="row mb-3">
+                    <label for="title" class="col-sm-2 col-form-label">Title</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="title" name="title" value="<%= title || '' %>"
+                            placeholder="Insert your title">
                     </div>
                 </div>
-            </fieldset>
-            <div class="d-flex mb-0" style="gap: 8px;">
-                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i></button>
-                <a href="/todos" class="btn btn-warning"><i class="fa-solid fa-rotate"></i></a>
-            </div>
-        </form>
+                <div class="row mb-3">
+                    <label for="deadline" class="col-sm-2 col-form-label">Deadline</label>
+                    <div class="col-sm-10 d-flex align-items-center">
+                        <input type="date" class="form-control me-2" name="deadlineMin"
+                            value="<%= deadlineMin || '' %>">
+                        <span class="range-separator me-2" style="width: 400px; text-align: center;">s.d.</span>
+                        <input type="date" class="form-control" name="deadlineMax" value="<%= deadlineMax || '' %>">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="complete" class="col-sm-2 col-form-label">Complete</label>
+                    <div class="col-sm-10">
+                        <select name="complete" id="complete" class="form-control">
+                            <option selected disabled class="d-none">&minus; Select Complete &minus;</option>
+                            <option value="false" <%=complete==='false' ? 'selected' : '' %>>Not Yet</option>
+                            <option value="true" <%=complete==='true' ? 'selected' : '' %>>Done</option>
+                        </select>
+                    </div>
+                </div>
+                <fieldset class="row mb-3">
+                    <legend class="col-form-label col-sm-2 pt-0">Operation</legend>
+                    <div class="col-sm-10">
+                        <div>
+                            <label style="margin-right: 15px;">
+                                <input type="radio" name="operation" value="OR" <% if (operation==='OR' || !operation) {
+                                    %> checked <% } %>> OR
+                            </label>
+                            <label>
+                                <input type="radio" name="operation" value="AND" <% if (operation==='AND' ) { %> checked
+                                <% } %>> AND
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="d-flex mb-0" style="gap: 8px;">
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    <a href="/todos" class="btn btn-warning"><i class="fa-solid fa-rotate"></i></a>
+                </div>
+            </form>
+        </div>
+
+        <hr>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">No.</th>
+                    <th scope="col">
+                        <a
+                            href="/todos?page=<%= page %>&title=<%= title || '' %>&deadlineMin=<%= deadlineMin || '' %>&deadlineMax=<%= deadlineMax || '' %>&complete=<%= complete || '' %>&operation=<%= operation || 'OR' %>&sort=title&order=<%= sort === 'title' && order === 'ASC' ? 'DESC' : 'ASC' %>">
+                            Title
+                            <% if (sort==='title' ) { %>
+                                <i class="fa-solid <%= order === 'ASC' ? 'fa-sort-up' : 'fa-sort-down' %>"></i>
+                                <% } else { %>
+                                    <i class="fa-solid fa-sort"></i>
+                                    <% } %>
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a
+                            href="/todos?page=<%= page %>&title=<%= title || '' %>&deadlineMin=<%= deadlineMin || '' %>&deadlineMax=<%= deadlineMax || '' %>&complete=<%= complete || '' %>&operation=<%= operation || 'OR' %>&sort=complete&order=<%= sort === 'complete' && order === 'ASC' ? 'DESC' : 'ASC' %>">
+                            Complete
+                            <% if (sort==='complete' ) { %>
+                                <i class="fa-solid <%= order === 'ASC' ? 'fa-sort-up' : 'fa-sort-down' %>"></i>
+                                <% } else { %>
+                                    <i class="fa-solid fa-sort"></i>
+                                    <% } %>
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a
+                            href="/todos?page=<%= page %>&title=<%= title || '' %>&deadlineMin=<%= deadlineMin || '' %>&deadlineMax=<%= deadlineMax || '' %>&complete=<%= complete || '' %>&operation=<%= operation || 'OR' %>&sort=deadline&order=<%= sort === 'deadline' && order === 'ASC' ? 'DESC' : 'ASC' %>">
+                            Deadline
+                            <% if (sort==='deadline' ) { %>
+                                <i class="fa-solid <%= order === 'ASC' ? 'fa-sort-up' : 'fa-sort-down' %>"></i>
+                                <% } else { %>
+                                    <i class="fa-solid fa-sort"></i>
+                                    <% } %>
+                        </a>
+                    </th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% data.forEach((item, index)=> { %>
+                    <tr>
+                        <th scope="row">
+                            <%= index + offset + 1 %>
+                        </th>
+                        <td>
+                            <%= item.title %>
+                        </td>
+                        <td>
+                            <%= item.complete ? 'Done' : 'Not Yet' %>
+                        </td>
+                        <td>
+                            <%= item.deadline %>
+                        </td>
+                        <td>
+                            <a href="/todos/edit/<%= item.id %>" class="btn btn-success"><i
+                                    class="fa-solid fa-pencil"></i></a>
+                            <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                data-item-id="<%= item.id %>">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
     </div>
 
-    <hr>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">No.</th>
-                <th scope="col">
-                    <a href="/todos?page=<%= page %>&title=<%= title || '' %>&deadlineMin=<%= deadlineMin || '' %>&deadlineMax=<%= deadlineMax || '' %>&complete=<%= complete || '' %>&operation=<%= operation || 'OR' %>&sort=title&order=<%= sort === 'title' && order === 'ASC' ? 'DESC' : 'ASC' %>">
-                        Title
-                        <% if (sort === 'title') { %>
-                            <i class="fa-solid <%= order === 'ASC' ? 'fa-sort-up' : 'fa-sort-down' %>"></i>
-                        <% } else { %>
-                            <i class="fa-solid fa-sort"></i>
-                        <% } %>
-                    </a>
-                </th>
-                <th scope="col">
-                    <a href="/todos?page=<%= page %>&title=<%= title || '' %>&deadlineMin=<%= deadlineMin || '' %>&deadlineMax=<%= deadlineMax || '' %>&complete=<%= complete || '' %>&operation=<%= operation || 'OR' %>&sort=complete&order=<%= sort === 'complete' && order === 'ASC' ? 'DESC' : 'ASC' %>">
-                        Complete
-                        <% if (sort === 'complete') { %>
-                            <i class="fa-solid <%= order === 'ASC' ? 'fa-sort-up' : 'fa-sort-down' %>"></i>
-                        <% } else { %>
-                            <i class="fa-solid fa-sort"></i>
-                        <% } %>
-                    </a>
-                </th>
-                <th scope="col">
-                    <a href="/todos?page=<%= page %>&title=<%= title || '' %>&deadlineMin=<%= deadlineMin || '' %>&deadlineMax=<%= deadlineMax || '' %>&complete=<%= complete || '' %>&operation=<%= operation || 'OR' %>&sort=deadline&order=<%= sort === 'deadline' && order === 'ASC' ? 'DESC' : 'ASC' %>">
-                        Deadline
-                        <% if (sort === 'deadline') { %>
-                            <i class="fa-solid <%= order === 'ASC' ? 'fa-sort-up' : 'fa-sort-down' %>"></i>
-                        <% } else { %>
-                            <i class="fa-solid fa-sort"></i>
-                        <% } %>
-                    </a>
-                </th>
-                <th scope="col">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% data.forEach((item, index) => { %>
-                <tr>
-                    <th scope="row">
-                        <%= index + offset + 1 %>
-                    </th>
-                    <td>
-                        <%= item.title %>
-                    </td>
-                    <td>
-                        <%= item.complete ? 'True' : 'False' %>
-                    </td>
-                    <td>
-                        <%= item.deadline %>
-                    </td>
-                    <td>
-                        <a href="/todos/edit/<%= item.id %>" class="btn btn-success"><i class="fa-solid fa-pencil"></i></a>
-                        <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-item-id="<%= item.id %>">
-                            <i class="fa-solid fa-trash"></i>
-                        </a>
-                    </td>
-                </tr>
-            <% }) %>
-        </tbody>
-    </table>
-</div>
-
-<div class="card custom-card">
-    <div class="card-footer custom-card-footer d-flex mb-0 justify-content-between align-items-center">
-        <a href="/todos/add" class="btn btn-primary"><i class="fa-solid fa-plus"></i></a>
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                <li class="page-item<%= page == 1 ? ' disabled' : '' %>">
-                    <a class="page-link" href="/todos?page=<%= page - 1 %>&title=<%= title || '' %>&deadlineMin=<%= deadlineMin || '' %>&deadlineMax=<%= deadlineMax || '' %>&complete=<%= complete || '' %>&operation=<%= operation || 'OR' %>" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <% for (let i = 1; i <= pages; i++) { %>
-                    <li class="page-item<%= page == i ? ' active' : '' %>">
-                        <a class="page-link" href="/todos?page=<%= i %>&title=<%= title || '' %>&deadlineMin=<%= deadlineMin || '' %>&deadlineMax=<%= deadlineMax || '' %>&complete=<%= complete || '' %>&operation=<%= operation || 'OR' %>">
-                            <%= i %>
+    <div class="card custom-card">
+        <div class="card-footer custom-card-footer d-flex mb-0 justify-content-between align-items-center">
+            <a href="/todos/add" class="btn btn-primary"><i class="fa-solid fa-plus"></i></a>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item<%= page == 1 ? ' disabled' : '' %>">
+                        <a class="page-link"
+                            href="/todos?page=<%= page - 1 %>&title=<%= title || '' %>&deadlineMin=<%= deadlineMin || '' %>&deadlineMax=<%= deadlineMax || '' %>&complete=<%= complete || '' %>&operation=<%= operation || 'OR' %>"
+                            aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                <% } %>
-                <li class="page-item<%= page == pages ? ' disabled' : '' %>">
-                    <a class="page-link" href="/todos?page=<%= page + 1 %>&title=<%= title || '' %>&deadlineMin=<%= deadlineMin || '' %>&deadlineMax=<%= deadlineMax || '' %>&complete=<%= complete || '' %>&operation=<%= operation || 'OR' %>" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+                    <% for (let i=1; i <=pages; i++) { %>
+                        <li class="page-item<%= page == i ? ' active' : '' %>">
+                            <a class="page-link"
+                                href="/todos?page=<%= i %>&title=<%= title || '' %>&deadlineMin=<%= deadlineMin || '' %>&deadlineMax=<%= deadlineMax || '' %>&complete=<%= complete || '' %>&operation=<%= operation || 'OR' %>">
+                                <%= i %>
+                            </a>
+                        </li>
+                        <% } %>
+                            <li class="page-item<%= page == pages ? ' disabled' : '' %>">
+                                <a class="page-link"
+                                    href="/todos?page=<%= page + 1 %>&title=<%= title || '' %>&deadlineMin=<%= deadlineMin || '' %>&deadlineMax=<%= deadlineMax || '' %>&complete=<%= complete || '' %>&operation=<%= operation || 'OR' %>"
+                                    aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                </ul>
+            </nav>
+        </div>
     </div>
-</div>
 
-<%- include('partials/footer.ejs') %>
+    <%- include('partials/footer.ejs') %>

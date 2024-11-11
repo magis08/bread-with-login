@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const bcrypt = require('bcrypt')
+const path = require('path');
+const { isLoggedIn } = require('../helpers/util');
 
 module.exports = function (db) {
 
@@ -9,7 +11,7 @@ module.exports = function (db) {
   });
 
   router.get('/register', function (req, res, next) {
-    res.render('register')
+    res.render('register', { errorMessage: req.flash('errorMessage') })
   });
 
   router.post('/', async function (req, res, next) {
@@ -28,7 +30,8 @@ module.exports = function (db) {
       }
       req.session.user = {
         id: user.id,
-        email: user.email
+        email: user.email,
+        avatar: rows[0].avatar
       }
       res.redirect('/todos')
     } catch (e) {
@@ -41,18 +44,21 @@ module.exports = function (db) {
   router.post('/register', async function (req, res, next) {
     const { email, password, repassword } = req.body
     try {
-      if (password !== repassword) {
-        return res.send("password doesn't match!")
-      }
       const { rows } = await db.query('SELECT * FROM users WHERE email = $1 LIMIT 1', [email])
       if (rows.length > 0) {
-        return res.send("email already used")
+        req.flash('errorMessage', 'email already used')
+        return res.redirect('/register')
+      }
+      if (password !== repassword) {
+        req.flash('errorMessage', "password doesn't match")
+        return res.redirect('/register')
       }
       const hashPassword = await bcrypt.hashSync(password, 10);
       const { rows: users } = await db.query('INSERT INTO users(email, password) VALUES($1, $2) RETURNING *', [email, hashPassword])
       req.session.user = {
         id: users[0].id,
-        email: users[0].email
+        email: users[0].email,
+        avatar: users[0].avatar
       }
 
       res.redirect('/')
@@ -67,6 +73,33 @@ module.exports = function (db) {
       res.redirect('/')
     })
   })
+
+  router.get('/upload', isLoggedIn, function (req, res) {
+    res.render('upload')
+  })
+
+  router.post('/upload', isLoggedIn, function (req, res) {
+
+    if (!req.files || Object.keys(req.files).length === 0) {
+      return res.status(400).send('No files were uploaded.');
+    }
+
+    // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+    const avatar = req.files.avatar;
+    const fileName = `${Date.now()}-${avatar.name}`
+    const uploadPath = path.join(__dirname, '..', 'public', 'avatars', fileName)
+
+    // Use the mv() method to place the file somewhere on your server
+    avatar.mv(uploadPath, function (err) {
+      if (err)
+        return res.status(500).send(err);
+
+      db.query('UPDATE users SET avatar = $1 WHERE id = $2', [fileName, req.session.user.id], (err) => {
+        req.session.user.avatar = fileName
+        res.redirect('/todos')
+      })
+    });
+  });
 
   return router;
 }

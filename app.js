@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+const fileUpload = require('express-fileupload');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -13,7 +14,7 @@ const pool = new Pool({
   host: 'localhost',
   port: 5432,
   database: 'cobadb',
-  timezone: 'UTC',
+  // timezone: 'Asia/Jakarta',
 })
 
 var indexRouter = require('./routes/index')(pool);
@@ -36,6 +37,7 @@ app.use(session({
   saveUninitialized: true
 }))
 app.use(flash());
+app.use(fileUpload());
 
 app.use('/', indexRouter);
 app.use('/todos', todosRouter);

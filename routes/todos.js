@@ -32,9 +32,9 @@ module.exports = function (db) {
 
     const limit = 5;
     const offset = (page - 1) * limit;
-    let sql = 'SELECT count(*) as total FROM todos';
+    let sql = `SELECT count(*) as total FROM todos where userid = ${req.session.user.id}`;
     if (queries.length > 0) {
-      sql += ` where ${queries.join(` ${op} `)}`;
+      sql += ` and (${queries.join(` ${op} `)})`;
     }
 
     db.query(sql, params, (err, data) => {
@@ -43,16 +43,16 @@ module.exports = function (db) {
       const total = data.rows[0].total;
       const pages = Math.ceil(total / limit);
 
-      sql = `SELECT * FROM todos`;
+      sql = `SELECT * FROM todos where userid = ${req.session.user.id}`;
       if (queries.length > 0) {
-        sql += ` where ${queries.join(` ${op} `)}`;
+        sql += ` and ${queries.join(` ${op} `)}`;
       }
 
       sql += ` limit $${params.length + 1} offset $${params.length + 2}`;
 
-      sql = `SELECT * FROM todos`;
+      sql = `SELECT * FROM todos where userid = ${req.session.user.id}`;
       if (queries.length > 0) {
-        sql += ` where ${queries.join(` ${op} `)}`;
+        sql += ` and ${queries.join(` ${op} `)}`;
       }
 
       sql += ` ORDER BY ${sort} ${order} LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
