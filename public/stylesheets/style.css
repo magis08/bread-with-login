@@ -6,3 +6,27 @@ body {
 a {
   color: #00B7FF;
 }
+
+/* .custom-card {
+  border: 1px solid #ddd;
+} */
+
+.custom-card-header {
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  padding: 15px;
+  background-color: #f8f9fa;
+}
+
+.custom-card-footer {
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  padding: 15px;
+  background-color: #f8f9fa;
+}
+
+.card-body {
+  padding: 15px;
+  background-color: #ffffff;
+  border-radius: 0;
+}

@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 module.exports = function (db) {
 
   router.get('/', function (req, res, next) {
-    res.render('login')
+    res.render('login', { errorMessage: req.flash('errorMessage') })
   });
 
   router.get('/register', function (req, res, next) {
@@ -17,21 +17,24 @@ module.exports = function (db) {
     try {
       const { rows } = await db.query('SELECT * FROM users WHERE email = $1 LIMIT 1', [email])
       if (rows.length === 0) {
-        return res.send("Email not found!")
+        req.flash('errorMessage', 'email not found!')
+        return res.redirect('/')
       }
       const user = rows[0]
       const isPasswordCorrect = await bcrypt.compare(password, user.password);
       if (!isPasswordCorrect) {
-        return res.send("Incorrect password!");
+        req.flash('errorMessage', 'incorrect password!')
+        return res.redirect('/')
       }
       req.session.user = {
         id: user.id,
         email: user.email
       }
-      res.redirect('/users')
+      res.redirect('/todos')
     } catch (e) {
       console.log(e)
-      res.send('Something went wrong')
+      req.flash('errorMessage', 'something went wrong.')
+      return res.redirect('/')
     }
   })
 
@@ -58,6 +61,12 @@ module.exports = function (db) {
       res.send('something went wrong')
     }
   });
+
+  router.get('/logout', function (req, res) {
+    req.session.destroy(function (err) {
+      res.redirect('/')
+    })
+  })
 
   return router;
 }

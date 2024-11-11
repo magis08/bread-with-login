@@ -4,7 +4,7 @@
             <h1>Update Data</h1>
         </div>
         <div class="card-body">
-            <form action="/users/edit/<%= todo.id %>" method="post">
+            <form action="/todos/edit/<%= todo.id %>" method="post">
                 <div class="row mb-3">
                     <label for="title" class="col-sm-2 col-form-label">Title</label>
                     <div class="col-sm-10">
@@ -34,7 +34,7 @@
         </fieldset>
         <div class="card-footer">
             <button type="submit" class="btn btn-primary">Update</button>
-            <a href="/users" class="btn btn-warning">Cancel</a>
+            <a href="/todos" class="btn btn-warning">Cancel</a>
         </div>
         </form>
     </div>

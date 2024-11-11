@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const { Pool } = require ('pg')
 var session = require('express-session')
+var flash = require('connect-flash');
 
 const pool = new Pool({
   user: 'agis',
@@ -16,7 +17,7 @@ const pool = new Pool({
 })
 
 var indexRouter = require('./routes/index')(pool);
-var usersRouter = require('./routes/users')(pool);
+var todosRouter = require('./routes/todos')(pool);
 
 var app = express();
 
@@ -34,9 +35,10 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }))
+app.use(flash());
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/todos', todosRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
