@@ -7,6 +7,7 @@ var logger = require('morgan');
 const { Pool } = require ('pg')
 var session = require('express-session')
 var flash = require('connect-flash');
+// var moment = require('moment')
 
 const pool = new Pool({
   user: 'agis',
@@ -34,7 +35,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   secret: 'agis0803',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: false,
+  cookie : {
+    maxAge: 60 * 60 * 1000
+  }
 }))
 app.use(flash());
 app.use(fileUpload());

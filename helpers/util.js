@@ -1,10 +1,14 @@
    const isLoggedIn = (req, res, next) => {
-    if (req.session.user) {
-        next()
+    if (!req.session.user) {
+      req.session.redirectTo = req.originalUrl
+      req.flash('errorMessage', 'Please login first.')
+      return res.redirect('/')
     } else {
-        res.redirect('/')
+      next()
     }
 }
+
+const moment = require ('moment-timezone')
 
 const months = [
     'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
@@ -12,17 +16,19 @@ const months = [
   ];
   
   function formatDate(date) {
-    const d = new Date(date);
-    const day = d.getDate();
-    const month = months[d.getMonth()];
-    const year = d.getFullYear();
-    let hours = d.getHours();
-    let minutes = d.getMinutes();
+    const mDate = moment(date).tz('Asia/Jakarta')
+    // const d = new Date(date);
+    const day = mDate.date();
+    const month = months[mDate.month()];
+    const year = mDate.year();
+    let hours = mDate.hours();
+    let minutes = mDate.minutes();
     
     minutes = minutes < 10 ? '0' + minutes : minutes;
     
     return `${day} ${month} ${year} ${hours}:${minutes}`;
   }
+
   
 
   module.exports = {

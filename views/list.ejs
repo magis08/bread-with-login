@@ -112,8 +112,10 @@
                 </tr>
             </thead>
             <tbody>
-                <% data.forEach((item, index)=> { %>
-                    <tr>
+                <% data.forEach((item, index)=> { 
+                    let isDeadlinePassed = new Date(item.deadline) < new Date()
+                    let isNotYetAndDeadlinePassed = !item.complete && isDeadlinePassed %>
+                    <tr class="<%= isNotYetAndDeadlinePassed ? 'table-danger' : ''%>">
                         <th scope="row">
                             <%= index + offset + 1 %>
                         </th>
@@ -124,7 +126,7 @@
                             <%= item.complete ? 'Done' : 'Not Yet' %>
                         </td>
                         <td>
-                            <%= item.deadline %>
+                            <%= moment(item.deadline).format('DD MMM YYYY HH:mm') %>
                         </td>
                         <td>
                             <a href="/todos/edit/<%= item.id %>" class="btn btn-success"><i

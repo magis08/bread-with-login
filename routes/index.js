@@ -7,10 +7,16 @@ const { isLoggedIn } = require('../helpers/util');
 module.exports = function (db) {
 
   router.get('/', function (req, res, next) {
+    if(req.session.user) {
+      return res.redirect('/todos')
+    }
     res.render('login', { errorMessage: req.flash('errorMessage') })
   });
 
   router.get('/register', function (req, res, next) {
+    if(req.session.user) {
+      return res.redirect('/todos')
+    }
     res.render('register', { errorMessage: req.flash('errorMessage') })
   });
 
@@ -33,7 +39,10 @@ module.exports = function (db) {
         email: user.email,
         avatar: rows[0].avatar
       }
-      res.redirect('/todos')
+      const redirectTo = req.session.redirectTo || '/todos'
+      delete req.session.redirectTo
+      
+      res.redirect(redirectTo)
     } catch (e) {
       console.log(e)
       req.flash('errorMessage', 'something went wrong.')

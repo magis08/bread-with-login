@@ -1,10 +1,11 @@
 var express = require('express');
 const { isLoggedIn, formatDate } = require('../helpers/util');
 var router = express.Router()
+const moment = require('moment-timezone')
 
 module.exports = function (db) {
   router.get('/', isLoggedIn, function (req, res, next) {
-    const { page = 1, title, deadlineMin, deadlineMax, complete, operation = 'OR', sort = 'id', order = 'ASC' } = req.query;
+    let { page = 1, title, deadlineMin, deadlineMax, complete, operation = 'OR', sort = 'id', order = 'ASC' } = req.query;
     const queries = [];
     const params = [];
     const op = (operation && operation.toUpperCase() === 'OR') ? 'OR' : 'AND';
@@ -21,13 +22,13 @@ module.exports = function (db) {
 
     if (deadlineMin && deadlineMax) {
       params.push(deadlineMin, deadlineMax);
-      queries.push(`deadline BETWEEN $${params.length - 1} AND $${params.length}`);
+      queries.push(`deadline BETWEEN $${params.length - 1} AND $${params.length}::timestamp + interval '1 day' - interval '1 second'`);
     } else if (deadlineMin) {
       params.push(deadlineMin);
       queries.push(`deadline >= $${params.length}`);
     } else if (deadlineMax) {
       params.push(deadlineMax);
-      queries.push(`deadline <= $${params.length}`);
+      queries.push(`deadline <= $${params.length}::timestamp + interval '1 day' - interval '1 second'`);
     }
 
     const limit = 5;
@@ -36,7 +37,7 @@ module.exports = function (db) {
     if (queries.length > 0) {
       sql += ` and (${queries.join(` ${op} `)})`;
     }
-
+console.log(sql)
     db.query(sql, params, (err, data) => {
       if (err) return res.send(err);
 
@@ -64,6 +65,7 @@ module.exports = function (db) {
           item.deadline = formatDate(item.deadline);
         });
 
+        console.log(data.rows, deadlineMax)
         res.render('list', {
           title,
           complete,
@@ -76,6 +78,7 @@ module.exports = function (db) {
           operation,
           deadlineMin,
           deadlineMax,
+          moment,
           user: req.session.user
         });
       });
@@ -87,7 +90,7 @@ module.exports = function (db) {
     res.render('form')
   })
 
-  router.post('/add', function (req, res, next) {
+  router.post('/add', isLoggedIn, function (req, res, next) {
     const { title } = req.body
     const userId = req.session.user ? req.session.user.id : null
 
@@ -146,7 +149,6 @@ module.exports = function (db) {
       );
     });
   });
-
 
   router.get('/delete/:id', isLoggedIn, function (req, res, next) {
     const { id } = req.params

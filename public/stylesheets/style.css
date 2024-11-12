@@ -7,9 +7,10 @@ a {
   color: #00B7FF;
 }
 
-/* .custom-card {
-  border: 1px solid #ddd;
-} */
+.table-danger {
+  background-color: red !important;
+  color: white
+}
 
 .custom-card-header {
   border-top-left-radius: 15px;
