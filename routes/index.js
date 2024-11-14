@@ -84,7 +84,8 @@ module.exports = function (db) {
   })
 
   router.get('/upload', isLoggedIn, function (req, res) {
-    res.render('upload')
+    const avatarUrl = req.session.user.avatar ? `/avatars/${req.session.user.avatar}` : '/avatars/user.png'
+    res.render('upload', { avatarUrl })
   })
 
   router.post('/upload', isLoggedIn, function (req, res) {

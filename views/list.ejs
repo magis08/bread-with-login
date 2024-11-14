@@ -149,7 +149,7 @@
                 <ul class="pagination">
                     <li class="page-item<%= page == 1 ? ' disabled' : '' %>">
                         <a class="page-link"
-                            href="/todos?page=<%= page - 1 %>&title=<%= title || '' %>&deadlineMin=<%= deadlineMin || '' %>&deadlineMax=<%= deadlineMax || '' %>&complete=<%= complete || '' %>&operation=<%= operation || 'OR' %>"
+                            href="/todos?page=<%= page - 1 %>&title=<%= title || '' %>&deadlineMin=<%= deadlineMin || '' %>&deadlineMax=<%= deadlineMax || '' %>&complete=<%= complete || '' %>&operation=<%= operation || 'OR' %>&sort=<%= sort %>&order=<%= order %>"
                             aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
@@ -157,14 +157,14 @@
                     <% for (let i=1; i <=pages; i++) { %>
                         <li class="page-item<%= page == i ? ' active' : '' %>">
                             <a class="page-link"
-                                href="/todos?page=<%= i %>&title=<%= title || '' %>&deadlineMin=<%= deadlineMin || '' %>&deadlineMax=<%= deadlineMax || '' %>&complete=<%= complete || '' %>&operation=<%= operation || 'OR' %>">
+                                href="/todos?page=<%= i %>&title=<%= title || '' %>&deadlineMin=<%= deadlineMin || '' %>&deadlineMax=<%= deadlineMax || '' %>&complete=<%= complete || '' %>&operation=<%= operation || 'OR' %>&sort=<%= sort %>&order=<%= order %>">
                                 <%= i %>
                             </a>
                         </li>
                         <% } %>
                             <li class="page-item<%= page == pages ? ' disabled' : '' %>">
                                 <a class="page-link"
-                                    href="/todos?page=<%= page + 1 %>&title=<%= title || '' %>&deadlineMin=<%= deadlineMin || '' %>&deadlineMax=<%= deadlineMax || '' %>&complete=<%= complete || '' %>&operation=<%= operation || 'OR' %>"
+                                    href="/todos?page=<%= page + 1 %>&title=<%= title || '' %>&deadlineMin=<%= deadlineMin || '' %>&deadlineMax=<%= deadlineMax || '' %>&complete=<%= complete || '' %>&operation=<%= operation || 'OR' %>&sort=<%= sort %>&order=<%= order %>"
                                     aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
